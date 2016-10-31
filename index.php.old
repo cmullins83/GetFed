@@ -1,0 +1,47 @@
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<?php
+require_once('../XboxDB.php');
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+} 
+  if (isset($_GET['hello'])) {
+$pushedname=$_GET['hello'];
+  }
+  
+  function updateRow() {
+	  global $conn;
+$pushedname=$_GET['hello'];
+$sql2 = "UPDATE games SET checked = IF(checked='Y','N','Y') WHERE Name = '$pushedname';";
+$result1 = $conn->query($sql2);
+}
+
+  if (isset($_GET['hello'])) {
+    updateRow();
+  }
+  
+$sql = "SELECT * FROM games ORDER BY Name ASC";
+$result = $conn->query($sql);
+echo '<center>';
+	while($row = $result->fetch_assoc()) {
+		
+		echo '<div id="container">';
+		echo '<div id="main_image"><a href="index.php?hello=';
+		echo $row["Name"];
+		echo '">';
+		echo '<img src="./images/';
+		echo $row["Image"];
+		echo '" style="width:150px;height:200px;"></img></a></div>';
+		if ($row["Checked"] == "Y") echo '<div id="overlay_image"><img src="./images/Check.png" style="width:30px;height:30px;"></img></div>';
+		echo "</div>";				
+	}
+		$conn->close();
+?>
+</center>';
+</body>
